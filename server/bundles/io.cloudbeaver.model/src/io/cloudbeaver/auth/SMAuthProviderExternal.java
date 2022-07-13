@@ -62,7 +62,7 @@ public interface SMAuthProviderExternal<AUTH_SESSION extends SMSession> extends 
     DBPObject getUserDetails(
         @NotNull DBRProgressMonitor monitor,
         @NotNull WebSession webSession,
-        @NotNull AUTH_SESSION session,
+        @Nullable AUTH_SESSION session,
         @NotNull WebUser user,
         boolean selfIdentity) throws DBException;
 

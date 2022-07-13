@@ -72,7 +72,7 @@ public class RPAuthProvider implements SMAuthProviderExternal<SMSession> {
 
     @Nullable
     @Override
-    public DBPObject getUserDetails(@NotNull DBRProgressMonitor monitor, @NotNull WebSession webSession, @NotNull SMSession session, @NotNull WebUser user, boolean selfIdentity) throws DBException {
+    public DBPObject getUserDetails(@NotNull DBRProgressMonitor monitor, @NotNull WebSession webSession, @Nullable SMSession session, @NotNull WebUser user, boolean selfIdentity) throws DBException {
         return null;
     }
 

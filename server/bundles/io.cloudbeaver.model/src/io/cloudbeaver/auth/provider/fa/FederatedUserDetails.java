@@ -19,22 +19,23 @@ package io.cloudbeaver.auth.provider.fa;
 
 import io.cloudbeaver.model.user.WebUser;
 import org.jkiss.code.NotNull;
+import org.jkiss.code.Nullable;
 import org.jkiss.dbeaver.model.DBPObject;
 import org.jkiss.dbeaver.model.meta.Property;
 
 public class FederatedUserDetails implements DBPObject {
 
-    @NotNull
+    @Nullable
     private AbstractSessionFederated session;
     @NotNull
     private WebUser user;
 
-    public FederatedUserDetails(@NotNull AbstractSessionFederated session, @NotNull WebUser user) {
+    public FederatedUserDetails(@Nullable AbstractSessionFederated session, @NotNull WebUser user) {
         this.session = session;
         this.user = user;
     }
 
-    @NotNull
+    @Nullable
     public AbstractSessionFederated getSession() {
         return session;
     }
