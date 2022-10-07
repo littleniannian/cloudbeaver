@@ -62,7 +62,7 @@ cd ../
 
 cd ../cloudbeaver/webapp
 
-yarn
+yarn --https-proxy "https://nexus.dev.dbeaver.com/repository/yarn"
 #yarn link "react-data-grid"
 lerna run bootstrap
 lerna run build --no-bail --stream --scope=@cloudbeaver/product-default #-- -- --env source-map
