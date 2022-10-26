@@ -21,7 +21,7 @@ cd ../..
 #[ ! -d react-data-grid ] && git clone https://github.com/dbeaver/react-data-grid.git
 
 echo "Pull dbeaver platform"
-[ ! -d dbeaver ] && git clone --depth 1 https://github.com/ActionTechHuang/dbeaver.git  -b sqle_22_2_0
+[ ! -d dbeaver ] && git clone --depth 1 https://github.com/actiontech/dbeaver.git  -b sqle_22_2_0
 
 cd cloudbeaver/deploy
 
