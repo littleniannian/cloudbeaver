@@ -91,7 +91,7 @@ export class SqlAuditService {
       }
 
       const { data, status } = await axios.post<AuditTaskRes>(
-        "/v1/projects/" + split[0] + "/tasks/audits",
+        "/sqle/v1/projects/" + split[0] + "/tasks/audits",
         { instance_name: split[1].trim(), instance_schema: contextInfo.defaultCatalog, sql: query},
         {
           headers: {
@@ -123,7 +123,7 @@ export class SqlAuditService {
 
     try {
       const { data, status } = await axios.get<AuditTaskDescRes>(
-        "/v2/tasks/audits/"+ task.taskInfo?.task_id + "/sqls?page_index=1&page_size=100",
+        "/sqle/v2/tasks/audits/"+ task.taskInfo?.task_id + "/sqls?page_index=1&page_size=100",
         {
           headers: {
             'Accept': 'application/json',
