@@ -67,7 +67,7 @@ export const Body = observer(function Body() {
           <DialogsPortal />
           <Notifications />
         </theme>
-        {userInfo && <Watermark theme={userInfo?.configurationParameters['app.theme']} text={userInfo?.displayName || userInfo?.userId} />}
+        {userInfo && <Watermark theme={userInfo.configurationParameters?.['app.theme']} text={userInfo.displayName || userInfo.userId} />}
       </Loader>
     </DNDProvider>,
   );
