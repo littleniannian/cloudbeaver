@@ -9,7 +9,8 @@ import { observer } from 'mobx-react-lite';
 import { useLayoutEffect, useRef } from 'react';
 import styled, { css } from 'reshadow';
 
-import { Loader, useResource, useStyles } from '@cloudbeaver/core-blocks';
+import { AuthInfoService } from '@cloudbeaver/core-authentication';
+import { Loader, useResource, useStyles, Watermark } from '@cloudbeaver/core-blocks';
 import { useService } from '@cloudbeaver/core-di';
 import { DialogsPortal } from '@cloudbeaver/core-dialogs';
 import { Notifications } from '@cloudbeaver/core-notifications';
@@ -44,6 +45,8 @@ export const Body = observer(function Body() {
   const screenService = useService(ScreenService);
   const Screen = screenService.screen?.component;
   const { backendVersion } = useAppVersion();
+  const authInfoService = useService(AuthInfoService);
+  const userInfo = authInfoService.userInfo;
 
   // TODO: must be loaded in place where it is used
   useResource(Body, ProjectInfoResource, CachedMapAllKey, { silent: true });
@@ -64,6 +67,7 @@ export const Body = observer(function Body() {
           <DialogsPortal />
           <Notifications />
         </theme>
+        {userInfo && <Watermark theme={userInfo?.configurationParameters['app.theme']} text={userInfo?.displayName || userInfo?.userId} />}
       </Loader>
     </DNDProvider>,
   );
