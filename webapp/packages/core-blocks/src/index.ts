@@ -120,6 +120,7 @@ export * from './FormControls/BASE_DROPDOWN_STYLES';
 export * from './FormControls/FormBox';
 export * from './FormControls/Filter';
 export * from './Fill';
+export { default as Watermark } from './Watermark/Watermark';
 
 export * from './Containers/Container';
 export * from './Containers/Group';
