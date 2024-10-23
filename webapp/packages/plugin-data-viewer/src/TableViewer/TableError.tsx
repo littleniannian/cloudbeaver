@@ -133,7 +133,7 @@ export const TableError = observer<Props>(function TableError({ model, loading, 
     const nodeId = navTreeService.getView()?.context ?? '';
     const projectName = navNodeInfoResource.get(nodeId)?.name?.split(':')[0] ?? 'unknown';
     console.log(projectName);
-    window.open(`/sqle/cloud-beaver-to-create-workflow?args=${projectName}`);
+    window.open(`/cloud-beaver-to-create-workflow?args=${projectName}`);
   };
 
   let icon = '/icons/error_icon.svg';
