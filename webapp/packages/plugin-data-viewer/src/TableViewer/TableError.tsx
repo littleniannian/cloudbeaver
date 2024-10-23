@@ -10,8 +10,11 @@ import { observer } from 'mobx-react-lite';
 import styled, { css, use } from 'reshadow';
 
 import { Button, IconOrImage, useErrorDetails, useObservableRef, useStateDelay, useTranslate } from '@cloudbeaver/core-blocks';
+import { useService } from '@cloudbeaver/core-di';
+import { NavNodeInfoResource } from '@cloudbeaver/core-navigation-tree';
 import { ServerErrorType, ServerInternalError } from '@cloudbeaver/core-sdk';
 import { errorOf } from '@cloudbeaver/core-utils';
+import { NavigationTreeService } from '@cloudbeaver/plugin-navigation-tree';
 
 import type { IDatabaseDataModel } from '../DatabaseDataModel/IDatabaseDataModel';
 
@@ -93,6 +96,10 @@ interface ErrorInfo {
 
 export const TableError = observer<Props>(function TableError({ model, loading, className }) {
   const translate = useTranslate();
+
+  const navTreeService = useService(NavigationTreeService);
+  const navNodeInfoResource = useService(NavNodeInfoResource);
+
   const errorInfo = useObservableRef<ErrorInfo>(
     () => ({
       error: null,
@@ -121,6 +128,13 @@ export const TableError = observer<Props>(function TableError({ model, loading, 
 
   const errorHidden = errorInfo.error === null;
   const quote = internalServerError?.errorType === ServerErrorType.QUOTE_EXCEEDED;
+
+  const onCreateWorkflowNavigate = () => {
+    const nodeId = navTreeService.getView()?.context ?? '';
+    const projectName = navNodeInfoResource.get(nodeId)?.name?.split(':')[0] ?? 'unknown';
+    console.log(projectName);
+    window.open(`/sqle/cloud-beaver-to-create-workflow?args=${projectName}`);
+  };
 
   let icon = '/icons/error_icon.svg';
 
@@ -156,6 +170,9 @@ export const TableError = observer<Props>(function TableError({ model, loading, 
         )}
         <Button type="button" mod={['unelevated']} onClick={onRetry}>
           {translate('ui_processing_retry')}
+        </Button>
+        <Button type="button" mod={['unelevated']} onClick={onCreateWorkflowNavigate}>
+          {translate('ui_create_workflow')}
         </Button>
       </controls>
     </error>,
