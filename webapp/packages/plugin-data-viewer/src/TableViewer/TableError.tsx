@@ -11,7 +11,6 @@ import styled, { css, use } from 'reshadow';
 
 import { Button, IconOrImage, useErrorDetails, useObservableRef, useStateDelay, useTranslate } from '@cloudbeaver/core-blocks';
 import { useService } from '@cloudbeaver/core-di';
-import { NavNodeInfoResource } from '@cloudbeaver/core-navigation-tree';
 import { ServerErrorType, ServerInternalError } from '@cloudbeaver/core-sdk';
 import { errorOf } from '@cloudbeaver/core-utils';
 import { ConnectionSchemaManagerService } from '@cloudbeaver/plugin-datasource-context-switch';
@@ -97,7 +96,6 @@ interface ErrorInfo {
 export const TableError = observer<Props>(function TableError({ model, loading, className }) {
   const translate = useTranslate();
 
-  const navNodeInfoResource = useService(NavNodeInfoResource);
   const connection = useService(ConnectionSchemaManagerService);
 
   const errorInfo = useObservableRef<ErrorInfo>(
@@ -130,8 +128,7 @@ export const TableError = observer<Props>(function TableError({ model, loading, 
   const quote = internalServerError?.errorType === ServerErrorType.QUOTE_EXCEEDED;
 
   const onCreateWorkflowNavigate = () => {
-    const nodeId = connection.activeItem?.getCurrentNavNode?.(connection.activeItem.context)?.nodeId ?? '';
-    const projectName = navNodeInfoResource.get(nodeId)?.name?.split(':')[0] ?? 'unknown';
+    const projectName = connection.currentConnection?.name?.split(':')[0] ?? 'unknown';
     console.log(projectName);
     window.open(`/cloud-beaver-to-create-workflow?args=${projectName}`);
   };
