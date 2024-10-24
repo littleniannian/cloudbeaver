@@ -197,7 +197,7 @@ export const TableError = observer<Props>(function TableError({ model, loading, 
       sql,
     };
 
-    window.open(`/transit?from=cloudbeaver&to=create-workflow&projectName=${projectName}&compression_data=${compress(JSON.stringify(data))}`);
+    window.open(`/transit?from=cloudbeaver&to=create_workflow&project_name=${projectName}&compression_data=${compress(JSON.stringify(data))}`);
   };
 
   let icon = '/icons/error_icon.svg';
