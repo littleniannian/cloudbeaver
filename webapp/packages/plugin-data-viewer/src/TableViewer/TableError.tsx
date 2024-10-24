@@ -5,6 +5,7 @@
  * Licensed under the Apache License, Version 2.0.
  * you may not use this file except in compliance with the License.
  */
+import { compressToEncodedURIComponent } from 'lz-string';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import styled, { css, use } from 'reshadow';
@@ -131,61 +132,6 @@ export const TableError = observer<Props>(function TableError({ model, loading, 
   const errorHidden = errorInfo.error === null;
   const quote = internalServerError?.errorType === ServerErrorType.QUOTE_EXCEEDED;
 
-  const compress = (input: string) => {
-    function encodeNumbers(numbers: number[]): string {
-      // 将数字转换为二进制字符串
-      const binaryStr = numbers
-        .map(num => {
-          let bin = num.toString(2);
-          while (bin.length < 16) bin = '0' + bin; // 使用 16 位表示每个数字
-          return bin;
-        })
-        .join('');
-
-      // 将二进制字符串按 6 位分组并转换为 Base64URL
-      const base64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-      let result = '';
-
-      for (let i = 0; i < binaryStr.length; i += 6) {
-        let chunk = binaryStr.slice(i, i + 6);
-        while (chunk.length < 6) chunk += '0'; // 补齐最后一组
-        result += base64Chars[parseInt(chunk, 2)];
-      }
-
-      return result;
-    }
-
-    const dictionary: { [key: string]: number } = {};
-    const result: number[] = [];
-    let dictSize = 256;
-
-    // 初始化字典
-    for (let i = 0; i < 256; i++) {
-      dictionary[String.fromCharCode(i)] = i;
-    }
-
-    let current = '';
-    for (let i = 0; i < input.length; i++) {
-      const char = input.charAt(i);
-      const combined = current + char;
-
-      if (dictionary.hasOwnProperty(combined)) {
-        current = combined;
-      } else {
-        result.push(dictionary[current]);
-        dictionary[combined] = dictSize++;
-        current = char;
-      }
-    }
-
-    if (current !== '') {
-      result.push(dictionary[current]);
-    }
-
-    // 将数字数组转换为 URL 安全的字符串
-    return encodeNumbers(result);
-  };
-
   const onCreateWorkflowNavigate = () => {
     const [projectName, instanceName] = connectionSchemaManagerService.currentConnection?.name.split(':') ?? [];
     const schema = connectionSchemaManagerService.currentObjectCatalog?.name;
@@ -197,7 +143,11 @@ export const TableError = observer<Props>(function TableError({ model, loading, 
       sql,
     };
 
-    window.open(`/transit?from=cloudbeaver&to=create_workflow&project_name=${projectName}&compression_data=${compress(JSON.stringify(data))}`);
+    window.open(
+      `/transit?from=cloudbeaver&to=create_workflow&project_name=${projectName}&compression_data=${compressToEncodedURIComponent(
+        JSON.stringify(data),
+      )}`,
+    );
   };
 
   let icon = '/icons/error_icon.svg';
