@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  */
 import { observer } from 'mobx-react-lite';
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import styled, { css } from 'reshadow';
 
 import { AuthInfoService } from '@cloudbeaver/core-authentication';
@@ -37,6 +37,7 @@ const bodyStyles = css`
 `;
 
 export const Body = observer(function Body() {
+  const [edition, setEdition] = useState();
   // const serverConfigLoader = useResource(Body, ServerConfigResource, undefined);
   const themeService = useService(ThemeService);
   const style = useStyles(bodyStyles);
@@ -59,6 +60,20 @@ export const Body = observer(function Body() {
     document.documentElement.dataset.backendVersion = backendVersion;
   });
 
+  useLayoutEffect(() => {
+    const handleEvent = (event: any) => {
+      if (event.origin === window.location.origin && event.data.type === 'SQLE_EDITION') {
+        setEdition(event.data.edition);
+      }
+    };
+    window.opener.postMessage({ type: 'CB_LOADED' }, '/');
+    window.addEventListener('message', handleEvent);
+
+    return () => {
+      window.removeEventListener('message', handleEvent);
+    };
+  }, []);
+
   return styled(style)(
     <DNDProvider>
       <Loader suspense>
@@ -67,7 +82,9 @@ export const Body = observer(function Body() {
           <DialogsPortal />
           <Notifications />
         </theme>
-        {userInfo && <Watermark theme={userInfo.configurationParameters?.['app.theme']} text={userInfo.displayName || userInfo.userId} />}
+        {userInfo && edition === 'ee' && (
+          <Watermark theme={userInfo.configurationParameters?.['app.theme']} text={userInfo.displayName || userInfo.userId} />
+        )}
       </Loader>
     </DNDProvider>,
   );
