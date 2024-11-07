@@ -62,11 +62,14 @@ export const Body = observer(function Body() {
 
   useLayoutEffect(() => {
     const channel = new BroadcastChannel('CB_SQLE_BROADCAST_CHANNEL');
-    channel.addEventListener('message', event => {
+    const handleSetEdition = (event: any) => {
       if (event.data.type === 'sqle_edition') {
         setEdition(event.data.data);
       }
-    });
+    };
+    channel.addEventListener('message', handleSetEdition);
+
+    return () => channel.removeEventListener('message', handleSetEdition);
   }, []);
 
   return styled(style)(
