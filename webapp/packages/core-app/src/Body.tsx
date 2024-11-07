@@ -5,6 +5,7 @@
  * Licensed under the Apache License, Version 2.0.
  * you may not use this file except in compliance with the License.
  */
+import { decompressFromBase64 } from 'lz-string';
 import { observer } from 'mobx-react-lite';
 import { useLayoutEffect, useRef, useState } from 'react';
 import styled, { css } from 'reshadow';
@@ -18,6 +19,7 @@ import { ProjectInfoResource } from '@cloudbeaver/core-projects';
 import { SessionPermissionsResource } from '@cloudbeaver/core-root';
 import { ScreenService } from '@cloudbeaver/core-routing';
 import { CachedMapAllKey } from '@cloudbeaver/core-sdk';
+import { LocalStorageSaveService } from '@cloudbeaver/core-settings';
 import { ThemeService } from '@cloudbeaver/core-theming';
 import { DNDProvider } from '@cloudbeaver/core-ui';
 import { useAppVersion } from '@cloudbeaver/plugin-version';
@@ -61,15 +63,19 @@ export const Body = observer(function Body() {
   });
 
   useLayoutEffect(() => {
-    const channel = new BroadcastChannel('CB_SQLE_BROADCAST_CHANNEL');
-    const handleSetEdition = (event: any) => {
-      if (event.data.type === 'sqle_edition') {
-        setEdition(event.data.data);
+    const channel = localStorage.getItem('DMS_CB_CHANNEL');
+    console.log(channel);
+    if (channel) {
+      try {
+        const json = JSON.parse(decompressFromBase64(channel));
+        console.log(json);
+        if (json.type === 'sqle_edition') {
+          setEdition(json.data);
+        }
+      } catch (error) {
+        console.error(error);
       }
-    };
-    channel.addEventListener('message', handleSetEdition);
-
-    return () => channel.removeEventListener('message', handleSetEdition);
+    }
   }, []);
 
   return styled(style)(
