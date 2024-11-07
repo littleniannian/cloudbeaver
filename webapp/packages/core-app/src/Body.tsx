@@ -64,11 +64,9 @@ export const Body = observer(function Body() {
 
   useLayoutEffect(() => {
     const channel = localStorage.getItem('DMS_CB_CHANNEL');
-    console.log(channel);
     if (channel) {
       try {
         const json = JSON.parse(decompressFromBase64(channel));
-        console.log(json);
         if (json.type === 'sqle_edition') {
           setEdition(json.data);
         }
