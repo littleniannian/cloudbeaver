@@ -61,17 +61,12 @@ export const Body = observer(function Body() {
   });
 
   useLayoutEffect(() => {
-    const handleEvent = (event: any) => {
-      if (event.origin === window.location.origin && event.data.type === 'SQLE_EDITION') {
-        setEdition(event.data.edition);
+    const channel = new BroadcastChannel('CB_SQLE_BROADCAST_CHANNEL');
+    channel.addEventListener('message', event => {
+      if (event.data.type === 'sqle_edition') {
+        setEdition(event.data.data);
       }
-    };
-    window.opener.postMessage({ type: 'CB_LOADED' }, '/');
-    window.addEventListener('message', handleEvent);
-
-    return () => {
-      window.removeEventListener('message', handleEvent);
-    };
+    });
   }, []);
 
   return styled(style)(
