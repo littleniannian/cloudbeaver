@@ -13,6 +13,7 @@ export default [
   ['ui_processing_canceling', '取消中...'],
   ['ui_processing_retry', '重试'],
   ['ui_create_workflow', '发起变更工单'],
+  ['ui_create_workflow_tips', '当前SQL未通过审核，如需要执行该SQL，请结合审核建议修改语句，或点击创建工单按钮，进行安全发布。'],
   ['ui_processing_ok', '好'],
   ['ui_processing_create', '创建'],
   ['ui_processing_save', '保存'],

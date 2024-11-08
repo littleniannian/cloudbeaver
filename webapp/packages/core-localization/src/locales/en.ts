@@ -14,6 +14,7 @@ export default [
   ['ui_processing_reload', 'Reload'],
   ['ui_processing_retry', 'Retry'],
   ['ui_create_workflow', 'Create Workflow'],
+  ['ui_create_workflow_tips', '当前SQL未通过审核，如需要执行该SQL，请结合审核建议修改语句，或点击创建工单按钮，进行安全发布。'],
   ['ui_processing_ok', 'Ok'],
   ['ui_processing_create', 'Create'],
   ['ui_processing_save', 'Save'],
