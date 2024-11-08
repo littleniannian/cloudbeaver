@@ -5,8 +5,9 @@
  * Licensed under the Apache License, Version 2.0.
  * you may not use this file except in compliance with the License.
  */
+import { decompressFromBase64 } from 'lz-string';
 import { observer } from 'mobx-react-lite';
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import styled, { css } from 'reshadow';
 
 import { AuthInfoService } from '@cloudbeaver/core-authentication';
@@ -18,6 +19,7 @@ import { ProjectInfoResource } from '@cloudbeaver/core-projects';
 import { SessionPermissionsResource } from '@cloudbeaver/core-root';
 import { ScreenService } from '@cloudbeaver/core-routing';
 import { CachedMapAllKey } from '@cloudbeaver/core-sdk';
+import { LocalStorageSaveService } from '@cloudbeaver/core-settings';
 import { ThemeService } from '@cloudbeaver/core-theming';
 import { DNDProvider } from '@cloudbeaver/core-ui';
 import { useAppVersion } from '@cloudbeaver/plugin-version';
@@ -37,6 +39,7 @@ const bodyStyles = css`
 `;
 
 export const Body = observer(function Body() {
+  const [edition, setEdition] = useState();
   // const serverConfigLoader = useResource(Body, ServerConfigResource, undefined);
   const themeService = useService(ThemeService);
   const style = useStyles(bodyStyles);
@@ -59,6 +62,20 @@ export const Body = observer(function Body() {
     document.documentElement.dataset.backendVersion = backendVersion;
   });
 
+  useLayoutEffect(() => {
+    const channel = localStorage.getItem('DMS_CB_CHANNEL');
+    if (channel) {
+      try {
+        const json = JSON.parse(decompressFromBase64(channel));
+        if (json.type === 'sqle_edition') {
+          setEdition(json.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, []);
+
   return styled(style)(
     <DNDProvider>
       <Loader suspense>
@@ -67,7 +84,9 @@ export const Body = observer(function Body() {
           <DialogsPortal />
           <Notifications />
         </theme>
-        {userInfo && <Watermark theme={userInfo.configurationParameters?.['app.theme']} text={userInfo.displayName || userInfo.userId} />}
+        {userInfo && edition === 'ee' && (
+          <Watermark theme={userInfo.configurationParameters?.['app.theme']} text={userInfo.displayName || userInfo.userId} />
+        )}
       </Loader>
     </DNDProvider>,
   );

@@ -81,6 +81,9 @@ const style = css`
       flex-shrink: 0;
     }
   }
+  create-workflow-tips {
+    margin-top: 24px;
+  }
 `;
 
 interface Props {
@@ -189,6 +192,8 @@ export const TableError = observer<Props>(function TableError({ model, loading, 
           {translate('ui_create_workflow')}
         </Button>
       </controls>
+
+      <create-workflow-tips>{translate('ui_create_workflow_tips')}</create-workflow-tips>
     </error>,
   );
 });
